@@ -7,18 +7,15 @@ axios.defaults.timeout = 5 * 10000;
 // axios.defaults.withCredentials = true
 
 // config request header
-axios.defaults.headers.common['token'] = localStorage.getItem("will_blog_user_token") || '';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 
 // config base url
 if (process.env.NODE_ENV ==='development'){
-  axios.defaults.baseURL = 'http://127.0.0.1/app/public/index.php';
+  axios.defaults.baseURL = 'http://127.0.0.1/blog/public/index.php';
 }else{
   axios.defaults.baseURL = 'http://app.yx319.cn/public/index.php';
 }
-// axios.defaults.baseURL = 'http://app.yx319.cn/public/index.php';
-// axios.defaults.baseURL = 'http://127.0.0.1/app/public/index.php';
 
 
 // config request interceptors
@@ -97,3 +94,9 @@ export function DELETE(url, params) {
       });
   });
 }
+
+//拦截请求
+axios.interceptors.request.use(function (config) {
+  axios.defaults.headers.common['token'] = localStorage.getItem("will_blog_user_token")||'';
+  return config
+})

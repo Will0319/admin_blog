@@ -62,10 +62,12 @@ class App extends Component {
                 <Route exact path="/" render={() => <Redirect to="/login" />} />
                 <Route exact path="/login" component={Login} />
                 <HomeLayout>
-                  <Route exact path="/home" component={Home} />
-                  <Route exact path="/user" component={UserCenter} />
-                  <Route exact path="/blog/tag" component={Tags} />
-                  {/* <Route component={NotFound} /> */}
+                  <Switch>
+                    <Route exact path="/home" component={Home} />
+                    <Route exact path="/user" component={UserCenter} />
+                    <Route exact path="/blog/tag" component={Tags} />
+                    <Route component={NotFound} />
+                  </Switch>
                 </HomeLayout>
               </Switch>
           </div>

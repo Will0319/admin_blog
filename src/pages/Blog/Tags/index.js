@@ -7,22 +7,30 @@ import './index.less';
 // import { hot } from 'react-hot-loader';
 import { withRouter } from 'react-router-dom';
 import { GET } from '../../../utils/axios';
-import CollectionCreateForm from './addModal';
+import CollectionCreateForm from './Modal';
 const confirm = Modal.confirm;
 
 
 @withRouter
 class Tags extends Component {
     state = {
+        // 模态框状态
         visible: false,
-        addModalLoading: false,
+        // 添加loading状态
+        ModalLoading: false,
+        // 标签默认数据
         tagsContent: {
             list: [],
             total: 0,
             pageNum: 1,
             pageSize: 10
         },
-        tableLoading: false
+        // 表格加载
+        tableLoading: false,
+        // 是否是修改模态框
+        isMod:false,
+        // 修改的标签数据
+        modData:''
     };
 
     componentDidMount() {
@@ -34,15 +42,19 @@ class Tags extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                // console.log('Received values of form: ', values);
                 this.getTags(1, 10, values.name);
             }
         });
     }
 
     // 打开添加弹窗
-    showModal = () => {
-        this.setState({ visible: true });
+    showAddModal = () => {
+        this.setState({ visible: true, isMod:false});
+    }
+
+    // 打开修改弹窗
+    showModModal = (data) => {
+        this.setState({ visible: true, isMod: true ,modData:data});
     }
 
     // 关闭添加弹窗
@@ -54,30 +66,64 @@ class Tags extends Component {
     handleCreate = () => {
         const form = this.formRef.props.form;
         form.validateFields((err, values) => {
-            this.setState({ addModalLoading: true });
+            this.setState({ ModalLoading: true });
             if (err) {
                 return;
             }
+            const { isMod, modData } = this.state;
+            if (isMod){
+                const update = GET('api/blog/updatetags', {
+                    id: modData.id,
+                    color: values.color,
+                    name: values.name,
+                })
+                update.then(res=>{
+                    this.setState({ visible: false, ModalLoading: false });
+                    const data = res.data;
+                    if (data.error_code === 0) {
+                        console.log(data)
+                        notification.success({
+                            message: data.msg,
+                        })
+                    } else {
+                        notification.error({
+                            message: data.msg,
+                        })
+                        return
+                    }
+                    this.getTags(1, 10);
+                })
+                return
+            };
             GET('/api/blog/addtags', {
                 color: values.color,
                 name: values.name,
             }).then(res => {
-                this.setState({ visible: false, addModalLoading: false });
+                this.setState({ visible: false, ModalLoading: false });
                 const data = res.data;
-                if (data.error_code == 0) {
+                if (data.error_code === 0) {
                     notification.success({
                         message: data.msg,
                     })
+                }else{
+                    notification.error({
+                        message: data.msg,
+                    })
+                    return
                 }
                 this.getTags(1, 10);
             })
         });
     }
+
+
     // 重置搜索条件
     reset = () => {
         this.props.form.setFieldsValue({ name: '' });
         this.getTags(1, 10);
     }
+
+
     // 获取Tag
     getTags = (pageNum, pageSize, name = '') => {
         this.setState({ tableLoading: true })
@@ -124,7 +170,7 @@ class Tags extends Component {
         this.getTags(page, pageSize);
     }
     render() {
-        const { addModalLoading, visible, tagsContent, tableLoading } = this.state;
+        const { ModalLoading, visible, tagsContent, tableLoading, isMod, modData} = this.state;
         const { form } = this.props;
         const { getFieldDecorator } = form;
         const columns = [
@@ -149,14 +195,13 @@ class Tags extends Component {
                 key: 'action',
                 render: (text, record) => (
                     <span>
-                        <Button size="small" type="primary">编辑</Button>
+                        <Button size="small" type="primary" onClick={() => this.showModModal(record)}>编辑</Button>
                         <Divider type="vertical" />
                         <Button size="small" type="danger" onClick={() => this.delTag(record.id, record.name)}>删除</Button>
                     </span>
                 ),
             }
         ];
-        // 表格分页属性
         // 表格分页属性
         const paginationProps = {
             showSizeChanger: true,
@@ -176,9 +221,10 @@ class Tags extends Component {
                     visible={visible}
                     onCancel={this.handleCancel}
                     onCreate={this.handleCreate}
-                    loading={addModalLoading}
+                    loading={ModalLoading}
+                    isMod={isMod}
+                    modData={modData}
                 />
-
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
                         <Form layout="inline" onSubmit={this.handleSubmit}>
@@ -209,7 +255,7 @@ class Tags extends Component {
                         </Form>
                     </div>
                     <div>
-                        <Button type="primary" style={{ float: 'right' }} onClick={() => this.showModal()}>添加标签</Button>
+                        <Button type="primary" style={{ float: 'right' }} onClick={() => this.showAddModal()}>添加标签</Button>
                     </div>
                 </div>
                 <Row style={{ marginTop: 20 }}>
