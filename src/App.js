@@ -24,13 +24,24 @@ const Loadings = () => (
   </div>
 );
 // 配置异步加载
+// 登录页面
 const Login = Loadable({
   loader: () => import('./pages/Login'),
   loading: Loadings,
 });
-
+// 主页
 const Home = Loadable({
   loader: () => import('./pages/Home'),
+  loading: Loadings,
+});
+// 个人中心
+const UserCenter = Loadable({
+  loader: () => import('./pages/UserCenter/UserCenter'),
+  loading: Loadings,
+});
+// 404页面
+const NotFound = Loadable({
+  loader: () => import('./pages/NotFound'),
   loading: Loadings,
 });
 
@@ -45,6 +56,8 @@ class App extends Component {
                 <Route exact path="/login" component={Login} />
                 <HomeLayout>
                   <Route exact path="/home" component={Home} />
+                  <Route exact path="/user" component={UserCenter} />
+                  <Route component={NotFound} />
                 </HomeLayout>
               </Switch>
           </div>
