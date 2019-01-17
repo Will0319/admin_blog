@@ -39,6 +39,13 @@ const UserCenter = Loadable({
   loader: () => import('./pages/UserCenter/UserCenter'),
   loading: Loadings,
 });
+
+// 标签页
+const Tags = Loadable({
+  loader: () => import('./pages/Blog/Tags'),
+  loading: Loadings,
+});
+
 // 404页面
 const NotFound = Loadable({
   loader: () => import('./pages/NotFound'),
@@ -57,7 +64,8 @@ class App extends Component {
                 <HomeLayout>
                   <Route exact path="/home" component={Home} />
                   <Route exact path="/user" component={UserCenter} />
-                  <Route component={NotFound} />
+                  <Route exact path="/blog/tag" component={Tags} />
+                  {/* <Route component={NotFound} /> */}
                 </HomeLayout>
               </Switch>
           </div>

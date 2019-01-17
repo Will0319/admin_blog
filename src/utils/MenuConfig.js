@@ -10,8 +10,16 @@ const menuList = [
         icon: 'hdd',
         children: [
             {
+                title: '文章发布',
+                key: '/blog/articlerelease',
+            },
+            {
                 title: '标签管理',
                 key: '/blog/tag',
+            },
+            {
+                title: '文章管理',
+                key: '/blog/article',
             }
         ]
     },

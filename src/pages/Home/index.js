@@ -11,6 +11,7 @@ class Home extends Component {
         return (
             <div className='home-wrap'>
                 欢迎进入后台管理系统
+                 < small >您正在< b > {process.env.NODE_ENV} </ b >模式。</ small >
             </div>
         )
     }

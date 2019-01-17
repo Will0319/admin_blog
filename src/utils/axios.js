@@ -12,9 +12,13 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
 
 // config base url
+if (process.env.NODE_ENV ==='development'){
+  axios.defaults.baseURL = 'http://127.0.0.1/app/public/index.php';
+}else{
+  axios.defaults.baseURL = 'http://app.yx319.cn/public/index.php';
+}
 // axios.defaults.baseURL = 'http://app.yx319.cn/public/index.php';
-axios.defaults.baseURL = 'http://127.0.0.1/app/public/index.php';
-// axios.defaults.baseURL = 'http://localhost:3000';
+// axios.defaults.baseURL = 'http://127.0.0.1/app/public/index.php';
 
 
 // config request interceptors
