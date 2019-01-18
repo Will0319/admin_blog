@@ -61,7 +61,6 @@ class Home extends Component {
         let option = {
             xAxis: {
                 type: 'category',
-                // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
                 data: data && data[0] && data[0].result ? data[0].result.items[0]:[]
             },
             yAxis: {
@@ -165,7 +164,7 @@ class Home extends Component {
                     </Col>
                 </Row>
                 <Card 
-                    title="PV折线图" 
+                    title="最近一周PV折线图" 
                     style={{marginTop:20}}
                     {...option}
                     >
@@ -174,9 +173,6 @@ class Home extends Component {
                         theme="blog"
                         notMerge={true}
                         lazyUpdate={true}
-                        // style={{
-                        //     height: 500
-                        // }} 
                         />
                 </Card>
             </div>
