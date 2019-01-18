@@ -12,7 +12,7 @@ axios.defaults.headers.put['Content-Type'] = 'application/json';
 
 // config base url
 if (process.env.NODE_ENV ==='development'){
-  axios.defaults.baseURL = 'http://127.0.0.1/blog/public/index.php';
+  axios.defaults.baseURL = 'http://127.0.0.1/blog_server/public/index.php';
 }else{
   axios.defaults.baseURL = 'http://app.yx319.cn/public/index.php';
 }
